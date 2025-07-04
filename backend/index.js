@@ -16,6 +16,6 @@ appnew.register((multipart_1.default), {
 appnew.register(cors_1.default);
 appnew.register(upload_ts_1.default);
 appnew.register(getsuits_ts_1.default);
-appnew.listen({ port: (Number(process.env.Port)), host: "0.0.0.0" }, function () {
+appnew.listen({ port: (Number(process.env.PORT)), host: "0.0.0.0" }, function () {
     console.log("started");
 });

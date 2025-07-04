@@ -5,16 +5,15 @@ import cloudinary from "../util/cloudinary.ts";
 
 import {Image } from "../models/imageData.ts"
 import streamifier from "streamifier";
-import * as fs from "node:fs";
-const colornamer=(await import("color-namer")).default;
+ const colornamer=(await import("color-namer")).default;
 import getColors from "get-image-colors";
 import type { Options } from "get-image-colors";
  import type { RouteHandlerMethod } from "fastify";
  type reqBody={
-    "description":"string",
+    "description":string,
     "type":"Astar Poshak"|"Satan Suit"| "Cotton Suit"|"Jod"|"Odhni"|"Printed"|"Half Pure Poshak"|"Zero Pure Poshak"|"Pure Poshak",
     "price":`${number}`,
-    "imageCount":`${number}`
+   
     "title":string,
      "specs":string[]
 
@@ -36,18 +35,20 @@ export const fileprocess:changeparamtypefirst<RouteHandlerMethod,{body:reqBody }
     const promiseArr:Promise<unknown>[]=[];
     const imagenames:string[]=[];
     let ind=0;
-    let data={specs:[]}
+    let data:Partial<reqBody> ={specs:[],description:"",};
     let itrtxt= req.parts();
     console.log("exc");
       for await (const part of itrtxt){
           if(part.type!="file"){
                             console.log("gh")
-
+                        
                 if(part.fieldname=="specs"){
-                 data.specs.push(part.value);
+                 data.specs.push(part.value as string);
                 }else{
+                        if(part.fieldname!=undefined ){
 
-                    data[part.fieldname]=part.value 
+                            data[part.fieldname ]=part.value 
+                        }
                 }
           }else{
            

@@ -44,11 +44,12 @@ var __asyncValues = (this && this.__asyncValues) || function (o) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.fileprocess = void 0;
+var cln = require("color-namer");
 var cloudinary_ts_1 = require("../util/cloudinary.ts");
 // import getColors from 'get-image-colors';
+var ColorNamer = cln.default;
 var imageData_ts_1 = require("../models/imageData.ts");
 var streamifier_1 = require("streamifier");
-var fs = require("node:fs");
 var colornamer = (await Promise.resolve().then(function () { return require("color-namer"); })).default;
 var get_image_colors_1 = require("get-image-colors");
 var getcolor = function (buff, options) { return __awaiter(void 0, void 0, void 0, function () {
@@ -103,8 +104,6 @@ var fileprocess = function (req) { return __awaiter(void 0, void 0, void 0, func
             case 4: return [4 /*yield*/, part.toBuffer()];
             case 5:
                 filebuffer = _e.sent();
-                console.log("gh");
-                fs.writeFileSync("./new.jpg", filebuffer);
                 return [4 /*yield*/, getcolor(filebuffer, part.mimetype)];
             case 6:
                 color = _e.sent();

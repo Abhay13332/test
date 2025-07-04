@@ -2,7 +2,6 @@ import cloudinary from "../util/cloudinary.js";
 // import getColors from 'get-image-colors';
 import { Image } from "../models/imageData.js";
 import streamifier from "streamifier";
-import * as fs from "node:fs";
 const colornamer = (await import("color-namer")).default;
 import getColors from "get-image-colors";
 const getcolor = async (buff, options) => {
@@ -12,16 +11,19 @@ const getcolor = async (buff, options) => {
     return [top, name];
 };
 export const fileprocess = async (req) => {
-    let files = req.files();
+    // let files= req.files();
+    console.log("st");
     const colors = [];
     const colorNames = [];
     const promiseArr = [];
     const imagenames = [];
     let ind = 0;
     let data = { specs: [] };
-    let itrtxt = await req.parts();
+    let itrtxt = req.parts();
+    console.log("exc");
     for await (const part of itrtxt) {
         if (part.type != "file") {
+            console.log("gh");
             if (part.fieldname == "specs") {
                 data.specs.push(part.value);
             }
@@ -31,8 +33,6 @@ export const fileprocess = async (req) => {
         }
         else {
             let filebuffer = await part.toBuffer();
-            console.log();
-            fs.writeFileSync("./new.jpg", filebuffer);
             let color = await getcolor(filebuffer, part.mimetype);
             colors.push(color[0]);
             colorNames.push(color[1].name);
@@ -40,18 +40,6 @@ export const fileprocess = async (req) => {
             promiseArr.push(uploadBufferToCloudinary(filebuffer, filename));
             imagenames.push(filename);
         }
-    }
-    const fld = {};
-    for await (const part of files) {
-        let filebuffer = await part.toBuffer();
-        console.log();
-        fs.writeFileSync("./new.jpg", filebuffer);
-        let color = await getcolor(filebuffer, part.mimetype);
-        colors.push(color[0]);
-        colorNames.push(color[1].name);
-        const filename = `${Date.now()}/${ind++}.jpg`;
-        promiseArr.push(uploadBufferToCloudinary(filebuffer, filename));
-        imagenames.push(filename);
     }
     // console.log("somethingstart"+JSON.stringify(filebuffer)+"hjk");
     await Promise.all(promiseArr);
