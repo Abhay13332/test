@@ -11,7 +11,9 @@ appnew.register((multipart), {
     }
 });
 //    appnew.register(multer.contentParser)
-appnew.register(fastifycors);
+appnew.register(fastifycors,{
+     origin: true
+});
 appnew.register(upload);
 appnew.register(getsuits);
 appnew.listen({ port: (Number(process.env.PORT)), host: "0.0.0.0" }, () => {
