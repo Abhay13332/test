@@ -1,0 +1,10 @@
+backend
+.env
+tsconfig.json
+new.jpg
+.idea/
+.vscode/
+node_modulus
+node_modulus/*
+
+
