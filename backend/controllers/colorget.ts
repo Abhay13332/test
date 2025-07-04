@@ -9,7 +9,7 @@ import streamifier from "streamifier";
 import getColors from "get-image-colors";
 import type { Options } from "get-image-colors";
  import type { RouteHandlerMethod } from "fastify";
- type reqBody={
+  type reqBody={
     "description":string,
     "type":"Astar Poshak"|"Satan Suit"| "Cotton Suit"|"Jod"|"Odhni"|"Printed"|"Half Pure Poshak"|"Zero Pure Poshak"|"Pure Poshak",
     "price":`${number}`,
@@ -29,25 +29,37 @@ type changeparamtypefirst<T extends (...args:any[])=> any,K> =T extends ((a:infe
 export const fileprocess:changeparamtypefirst<RouteHandlerMethod,{body:reqBody }> =async(req)=>{
     // let files= req.files();
         console.log("st");
-
-    const colors:string[]=[];
+     const colors:string[]=[];
     const colorNames: ColorNamer.Color["name"][] =[];
     const promiseArr:Promise<unknown>[]=[];
     const imagenames:string[]=[];
     let ind=0;
-    let data:Partial<reqBody> ={specs:[],description:"",};
+    let data:reqBody ={specs:[],description:"",title:"",type:"Cotton Suit",price:"1000",};
     let itrtxt= req.parts();
     console.log("exc");
+     type Omitn<T,keys extends keyof T>=Omit<T,keys>
+    const check=function(part:string):part is keyof Omitn<reqBody,"specs"> {
+        return part in data;
+    }
+    const valuecheck=function(value:unknown,key:keyof reqBody) :value is reqBody[typeof key] {
+          return  typeof value=="string";
+         
+
+    }
       for await (const part of itrtxt){
           if(part.type!="file"){
                             console.log("gh")
-                        
                 if(part.fieldname=="specs"){
+                    
                  data.specs.push(part.value as string);
                 }else{
                         if(part.fieldname!=undefined ){
-
-                            data[part.fieldname ]=part.value 
+                            const fln=part.fieldname ;
+                            if(check(fln)){
+                                if(valuecheck(part.value,fln)){
+                                    //@ts-expect-error
+                          data[fln]=part.value as (reqBody)[typeof fln];
+                        }}
                         }
                 }
           }else{

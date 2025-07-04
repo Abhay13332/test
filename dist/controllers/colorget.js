@@ -18,9 +18,15 @@ export const fileprocess = async (req) => {
     const promiseArr = [];
     const imagenames = [];
     let ind = 0;
-    let data = { specs: [] };
+    let data = { specs: [], description: "", title: "", type: "Cotton Suit", price: "1000", };
     let itrtxt = req.parts();
     console.log("exc");
+    const check = function (part) {
+        return part in data;
+    };
+    const valuecheck = function (value, key) {
+        return typeof value == "string";
+    };
     for await (const part of itrtxt) {
         if (part.type != "file") {
             console.log("gh");
@@ -28,7 +34,15 @@ export const fileprocess = async (req) => {
                 data.specs.push(part.value);
             }
             else {
-                data[part.fieldname] = part.value;
+                if (part.fieldname != undefined) {
+                    const fln = part.fieldname;
+                    if (check(fln)) {
+                        if (valuecheck(part.value, fln)) {
+                            //@ts-expect-error
+                            data[fln] = part.value;
+                        }
+                    }
+                }
             }
         }
         else {
